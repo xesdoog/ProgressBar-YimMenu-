@@ -2,7 +2,7 @@
 local test_tab = gui.get_tab("Test Stuff")
 --//main
 local x = 0
-local counter = 0
+local counter = 0 -- this is basically a timer that will be useful in the execution part to help us automatically close a window.
 function progressBar()
     x = x + 0.01 -- adjusting this float adjusts the speed at which the progress bar reaches the max (higher = faster). values are between 0 and 1.
     if x > 1 then
@@ -25,11 +25,11 @@ test_tab:add_imgui(function()
     ImGui.SetNextWindowBgAlpha(0)
     if ImGui.BeginPopupModal("##Progress Bar", ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.AlwaysAutoResize) then
             displayProgressBar()
-            counter = counter + 1
             if x == 1 then
-                if counter > 150 then -- used as sort of a timer to automatically close the ImGui popup. if you maka a progressBar that loads fast, use a lower number.
+                counter = counter + 1 -- when the progress bar is full, we start a counter/timer that will later automatically close the popup window.
+                if counter > 50 then -- this is roughly half a second. making this number higher will cause the window to stay open for a longer time after the progress reaches 100%.
                     ImGui.CloseCurrentPopup()
-                    counter = 0 -- reset the counter otherwise the popup will display for one frame then close immediately.
+                    counter = 0 -- reset the counter otherwise the popup will display for just one frame then close immediately.
                     x = 0 -- reset x otherwise pessing the button again will just display a full bar that does nothing.
                 else return
                 end
